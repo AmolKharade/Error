@@ -1,0 +1,310 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+df = pd.read_csv('Heart.csv')
+print(df)
+ Unnamed: 0 Age Sex ChestPain RestBP Chol Fbs RestECG 
+MaxHR \
+0 1 63 1 typical 145 233 1 2 
+150 
+1 2 67 1 asymptomatic 160 286 0 2 
+108 
+2 3 67 1 asymptomatic 120 229 0 2 
+129 
+3 4 37 1 nonanginal 130 250 0 0 
+187 
+4 5 41 0 nontypical 130 204 0 2 
+172 
+.. ... ... ... ... ... ... ... ... 
+... 
+298 299 45 1 typical 110 264 0 0 
+132 
+299 300 68 1 asymptomatic 144 193 1 0 
+141 
+300 301 57 1 asymptomatic 130 131 0 0 
+115 
+301 302 57 0 nontypical 130 236 0 2 
+174 
+302 303 38 1 nonanginal 138 175 0 0 
+173 
+ ExAng Oldpeak Slope Ca Thal AHD 
+0 0 2.3 3 0.0 fixed No 
+1 1 1.5 2 3.0 normal Yes 
+2 1 2.6 2 2.0 reversable Yes 
+3 0 3.5 3 0.0 normal No 
+4 0 1.4 1 0.0 normal No 
+.. ... ... ... ... ... ... 
+298 0 1.2 2 0.0 reversable Yes 
+299 0 3.4 2 2.0 reversable Yes 
+300 1 1.2 2 1.0 reversable Yes 
+301 0 0.0 2 1.0 normal Yes 
+302 0 0.0 1 NaN normal No 
+[303 rows x 15 columns]
+df.shape #gives the number of rows and columns
+(303, 15)
+df.head() #gives first 5 rows
+ Unnamed: 0 Age Sex ChestPain RestBP Chol Fbs RestECG 
+MaxHR \
+0 1 63 1 typical 145 233 1 2 
+150 
+1 2 67 1 asymptomatic 160 286 0 2 
+108 
+2 3 67 1 asymptomatic 120 229 0 2 
+129 
+3 4 37 1 nonanginal 130 250 0 0 
+187 
+4 5 41 0 nontypical 130 204 0 2 
+172 
+ ExAng Oldpeak Slope Ca Thal AHD 
+0 0 2.3 3 0.0 fixed No 
+1 1 1.5 2 3.0 normal Yes 
+2 1 2.6 2 2.0 reversable Yes 
+3 0 3.5 3 0.0 normal No 
+4 0 1.4 1 0.0 normal No 
+df.dtypes #gives the datatypes of columns
+Unnamed: 0 int64
+Age int64
+Sex int64
+ChestPain object
+RestBP int64
+Chol int64
+Fbs int64
+RestECG int64
+MaxHR int64
+ExAng int64
+Oldpeak float64
+Slope int64
+Ca float64
+Thal object
+AHD object
+dtype: object
+df.isnull().sum() #counts the no. of missing values in each row or 
+column in a dataframe
+Unnamed: 0 0
+Age 0
+Sex 0
+ChestPain 0
+RestBP 0
+Chol 0
+Fbs 0
+RestECG 0
+MaxHR 0
+ExAng 0
+Oldpeak 0
+Slope 0
+Ca 4
+Thal 2
+AHD 0
+dtype: int64
+(df==0).sum() #count number of zero values in a dataframe
+Unnamed: 0 0
+Age 0
+Sex 97
+ChestPain 0
+RestBP 0
+Chol 0
+Fbs 258
+RestECG 151
+MaxHR 0
+ExAng 204
+Oldpeak 99
+Slope 0
+Ca 176
+Thal 0
+AHD 0
+dtype: int64
+df['Age'].mean()
+54.43894389438944
+df.columns #display the nmaes of columns
+Index(['Unnamed: 0', 'Age', 'Sex', 'ChestPain', 'RestBP', 'Chol', 
+'Fbs',
+ 'RestECG', 'MaxHR', 'ExAng', 'Oldpeak', 'Slope', 'Ca', 'Thal', 
+'AHD'],
+ dtype='object')
+df.info #gives overall info about the dataset
+<bound method DataFrame.info of Unnamed: 0 Age Sex 
+ChestPain RestBP Chol Fbs RestECG MaxHR \
+0 1 63 1 typical 145 233 1 2 
+150 
+1 2 67 1 asymptomatic 160 286 0 2 
+108 
+2 3 67 1 asymptomatic 120 229 0 2 
+129 
+3 4 37 1 nonanginal 130 250 0 0 
+187 
+4 5 41 0 nontypical 130 204 0 2 
+172 
+.. ... ... ... ... ... ... ... ... 
+... 
+298 299 45 1 typical 110 264 0 0 
+132 
+299 300 68 1 asymptomatic 144 193 1 0 
+141 
+300 301 57 1 asymptomatic 130 131 0 0 
+115 
+301 302 57 0 nontypical 130 236 0 2 
+174 
+302 303 38 1 nonanginal 138 175 0 0 
+173 
+ ExAng Oldpeak Slope Ca Thal AHD 
+0 0 2.3 3 0.0 fixed No 
+1 1 1.5 2 3.0 normal Yes 
+2 1 2.6 2 2.0 reversable Yes 
+3 0 3.5 3 0.0 normal No 
+4 0 1.4 1 0.0 normal No 
+.. ... ... ... ... ... ... 
+298 0 1.2 2 0.0 reversable Yes 
+299 0 3.4 2 2.0 reversable Yes 
+300 1 1.2 2 1.0 reversable Yes 
+301 0 0.0 2 1.0 normal Yes 
+302 0 0.0 1 NaN normal No 
+[303 rows x 15 columns]>
+from sklearn.model_selection import train_test_split
+hd = df[['Age','Sex','ChestPain','RestBP','Chol']]
+x=hd.drop('Chol', axis=1)
+y=hd['Chol']
+print(x)
+print(y)
+ Age Sex ChestPain RestBP
+0 63 1 typical 145
+1 67 1 asymptomatic 160
+2 67 1 asymptomatic 120
+3 37 1 nonanginal 130
+4 41 0 nontypical 130
+.. ... ... ... ...
+298 45 1 typical 110
+299 68 1 asymptomatic 144
+300 57 1 asymptomatic 130
+301 57 0 nontypical 130
+302 38 1 nonanginal 138
+[303 rows x 4 columns]
+0 233
+1 286
+2 229
+3 250
+4 204
+ ... 
+298 264
+299 193
+300 131
+301 236
+302 175
+Name: Chol, Length: 303, dtype: int64
+#Now lets split the dataset
+xtrain,xtest,ytrain,ytest=train_test_split(x,y,test_size=0.25) 
+xtrain.shape 
+#here xtest ytest xtrain and y train are 4 tuples in numpy arrays
+#here xtrain and xtest stes of independent variables and
+#here ytarain and ytest are the sets of dependent variables
+(227, 4)
+ytest.shape
+(76,)
+df['Sex']=df['Sex'].replace([1], 'Male')
+df['Sex']=df['Sex'].replace([0], 'Female')
+print(df)
+ Unnamed: 0 Age Sex ChestPain RestBP Chol Fbs RestECG
+MaxHR \
+0 1 63 Male typical 145 233 1 2
+150 
+1 2 67 Male asymptomatic 160 286 0 2
+108 
+2 3 67 Male asymptomatic 120 229 0 2
+129 
+3 4 37 Male nonanginal 130 250 0 0
+187 
+4 5 41 Female nontypical 130 204 0 2
+172 
+.. ... ... ... ... ... ... ... ...
+... 
+298 299 45 Male typical 110 264 0 0
+132 
+299 300 68 Male asymptomatic 144 193 1 0
+141 
+300 301 57 Male asymptomatic 130 131 0 0
+115 
+301 302 57 Female nontypical 130 236 0 2
+174 
+302 303 38 Male nonanginal 138 175 0 0
+173 
+ ExAng Oldpeak Slope Ca Thal AHD 
+0 0 2.3 3 0.0 fixed No 
+1 1 1.5 2 3.0 normal Yes 
+2 1 2.6 2 2.0 reversable Yes 
+3 0 3.5 3 0.0 normal No 
+4 0 1.4 1 0.0 normal No 
+.. ... ... ... ... ... ... 
+298 0 1.2 2 0.0 reversable Yes 
+299 0 3.4 2 2.0 reversable Yes 
+300 1 1.2 2 1.0 reversable Yes 
+301 0 0.0 2 1.0 normal Yes 
+302 0 0.0 1 NaN normal No 
+[303 rows x 15 columns]
+dfl = df[df['AHD'].values == 'Yes']
+print(dfl)
+print(dfl.Age.max())
+print(dfl.Age.min())
+ Unnamed: 0 Age Sex ChestPain RestBP Chol Fbs RestECG
+MaxHR \
+1 2 67 Male asymptomatic 160 286 0 2
+108 
+2 3 67 Male asymptomatic 120 229 0 2
+129 
+6 7 62 Female asymptomatic 140 268 0 2
+160 
+8 9 63 Male asymptomatic 130 254 0 2
+147 
+9 10 53 Male asymptomatic 140 203 1 2
+155 
+.. ... ... ... ... ... ... ... ...
+... 
+297 298 57 Female asymptomatic 140 241 0 0
+123 
+298 299 45 Male typical 110 264 0 0
+132 
+299 300 68 Male asymptomatic 144 193 1 0
+141 
+300 301 57 Male asymptomatic 130 131 0 0
+115 
+301 302 57 Female nontypical 130 236 0 2
+174 
+ ExAng Oldpeak Slope Ca Thal AHD 
+1 1 1.5 2 3.0 normal Yes 
+2 1 2.6 2 2.0 reversable Yes 
+6 0 3.6 3 2.0 normal Yes 
+8 0 1.4 2 1.0 reversable Yes 
+9 1 3.1 3 0.0 reversable Yes 
+.. ... ... ... ... ... ... 
+297 1 0.2 2 0.0 reversable Yes 
+298 0 1.2 2 0.0 reversable Yes 
+299 0 3.4 2 2.0 reversable Yes 
+300 1 1.2 2 1.0 reversable Yes 
+301 0 0.0 2 1.0 normal Yes 
+[139 rows x 15 columns]
+77
+35
+df.groupby('AHD').AHD.count().plot.bar(ylim=0)
+plt.plot()
+[]
+df.plot(kind='box',subplots=True,layout=(2,7),sharex=False, 
+figsize=(20,10),color='blue')
+Unnamed: 0 AxesSubplot(0.125,0.536818;0.0945122x0.343182)
+Age AxesSubplot(0.238415,0.536818;0.0945122x0.343182)
+RestBP AxesSubplot(0.351829,0.536818;0.0945122x0.343182)
+Chol AxesSubplot(0.465244,0.536818;0.0945122x0.343182)
+Fbs AxesSubplot(0.578659,0.536818;0.0945122x0.343182)
+RestECG AxesSubplot(0.692073,0.536818;0.0945122x0.343182)
+MaxHR AxesSubplot(0.805488,0.536818;0.0945122x0.343182)
+ExAng AxesSubplot(0.125,0.125;0.0945122x0.343182)
+Oldpeak AxesSubplot(0.238415,0.125;0.0945122x0.343182)
+Slope AxesSubplot(0.351829,0.125;0.0945122x0.343182)
+Ca AxesSubplot(0.465244,0.125;0.0945122x0.343182)
+dtype: object
+df['Age'].hist(figsize=(10,13))
+plt.title('Age Histogram')
+Text(0.5, 1.0, 'Age Histogram')
+df.hist(figsize=(12,15))
+plt.show()
+pd.crosstab(df.Age, df.AHD).plot(kind='bar',figsize=(12,15))
+plt.title('Barchart for Age V AHD')
+Text(0.5, 1.0, 'Barchart for Age V AHD')
